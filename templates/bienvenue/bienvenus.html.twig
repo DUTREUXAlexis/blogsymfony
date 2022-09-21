@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{# {% block title %}Bienvenue !{% endblock %} #}
+
+{% block body %}
+
+    <h1>Bienvenue</h1>
+    <ul>
+        {% for prenom in prenoms %}
+            <li>{{ prenom }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
