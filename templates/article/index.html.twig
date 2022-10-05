@@ -1,0 +1,28 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails Article{% endblock %}
+
+{% block body %}
+    <h1 class="mt-5">{{ articles.titre | upper }}</h1>
+    <ul class="p-2">
+        <div class="border p-4 bg-light mt-4 mb-4"><h2> {{ articles.titre }} </h2>
+            <p class="font-italic mb-5">Créer le {{ articles.createdAt | date('d/m/Y')  }}</p>
+            <p>{{ articles.contenu }}</p>
+            <a href=""><span class="badge bg-secondary"></span></a>
+            <a class="badge bg-secondary text-light" href="{{ path("app_categorie_slug",{"slug":articles.categorie.slug }) }}">Détail de la catégorie</a>
+            <p><a href="{{ path("app_articles") }}">Retour aux articles</a></p>
+
+
+        </div>
+    </ul>
+    <h2>Commentaires</h2>
+    <p>Il y a {{ articles.commentaires | length }} commentaires</p>
+    {% for comment in articles.commentaires %}
+        <div class="border bg-light m-3 p-4">
+            <h3>Ce commentaire a été écrit par {{ comment.utilisateur.pseudo }}</h3>
+            <p>{{ comment.contenu }}</p>
+            <p>écrit le {{ comment.createdat | date("d/m/Y")}}</p>
+        </div>
+    {% endfor %}
+{% endblock %}

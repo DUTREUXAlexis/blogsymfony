@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Articles par catégorie{% endblock %}
+
+{% block body %}
+<h1 class="mt-5"> Liste des articles de la catégorie {{ categorie.titre }} </h1>
+    <p class="font-italic text-secondary">Il y a {{ categorie.articles | length }} articles</p>
+    <ul class="unstyled mx-auto">
+        {% for article in categorie.articles %}
+            <li class="unstyled list-group border bg-light p-4 mt-4 mb-4 row">
+                <div class="">
+                    <a href='{{ path('app_article_slug',{"slug":article.slug}) }}'><h2> {{ article.titre | upper}} </h2></a>
+                    <h3 class="font-italic mb-5 pl-5">Créé le {{ article.createdAt | date('d/m/Y')  }}</h3>
+                    <p>{{ article.contenu }}</p>
+                </div>
+                <div class="">
+
+                </div>
+
+
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

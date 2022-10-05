@@ -43,7 +43,7 @@ class ArticleFixtures extends Fixture implements DependentFixtureInterface
             //Récuperer une ref d'une catégorie
             $numcat = $faker->numberBetween(0,8);
             $article->setCategorie($this->getReference("categorie".$numcat));
-
+            $this->addReference("article".$i,$article);
             $manager->persist($article);
         }
         //Envoyer l'ordre INSERT

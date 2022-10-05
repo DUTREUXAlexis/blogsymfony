@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CategorieController!{% endblock %}
+
+{% block body %}
+    <h1 class="mt-5 mb-5">Liste des catégories</h1>
+    {% for cat in categories %}
+
+    <div class="row">
+        <div class="col d-flex justify-content-start mt-3 mb-3">
+            <h1>{{ cat.titre }} ( Contient {{ cat.articles | length }} articles )</h1>
+        </div>
+        <div class="col d-flex justify-content-end mt-3 mb-3">
+            <a class="border border-success text-light bg-success" style="" href="{{ path("app_categorie_slug",{"slug":cat.slug}) }}">+</a>
+        </div>
+    </div>
+    {% endfor %}
+
+
+{% endblock %}
