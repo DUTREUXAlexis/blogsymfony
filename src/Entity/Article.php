@@ -3,12 +3,18 @@
 namespace App\Entity;
 
 use App\Repository\ArticleRepository;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
+#[UniqueEntity(
+    'titre',
+    message: "Il existe déjà un article avec ce titre"
+)]
 class Article
 {
     #[ORM\Id]
@@ -17,7 +23,13 @@ class Article
     private ?int $id = null;
 
     #[ORM\Column(length: 200)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min : 5,
+        minMessage: "Le titre de l'article doit contenir au moins 5 caractères"
+    )]
     private ?string $titre = null;
+
 
     #[ORM\Column(length: 255)]
     private ?string $contenu = null;
@@ -33,6 +45,9 @@ class Article
 
     #[ORM\OneToMany(mappedBy: 'Article', targetEntity: Commentaire::class, orphanRemoval: true)]
     private Collection $commentaires;
+
+    #[ORM\Column]
+    private ?bool $publie = null;
 
     public function __construct()
     {
@@ -130,6 +145,18 @@ class Article
                 $commentaire->setArticle(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isPublie(): ?bool
+    {
+        return $this->publie;
+    }
+
+    public function setPublie(bool $publie): self
+    {
+        $this->publie = $publie;
 
         return $this;
     }

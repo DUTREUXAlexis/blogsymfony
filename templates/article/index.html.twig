@@ -17,7 +17,11 @@
         </div>
     </ul>
     <h2>Commentaires</h2>
-    <p>Il y a {{ articles.commentaires | length }} commentaires</p>
+    <div class="row container">
+        <p class="col">Il y a {{ articles.commentaires | length }} commentaires</p>
+        <a class="col-3 btn btn-secondary" href="{{ path('app_article_commentaire',{"slug":articles.slug})}}">Ajouter un commentaire</a>
+    </div>
+
     {% for comment in articles.commentaires %}
         <div class="border bg-light m-3 p-4">
             <h3>Ce commentaire a été écrit par {{ comment.utilisateur.pseudo }}</h3>

@@ -4,6 +4,7 @@
 
 {% block body %}
     <h1 class="mt-5 mb-3">Liste des articles</h1>
+    <a class="btn btn-secondary" href="{{ path("app_article_insert") }}">Ajouter un article</a>
     <ul class="unstyled">
     <ul class="unstyled mx-auto">
         {% for article in articles %}

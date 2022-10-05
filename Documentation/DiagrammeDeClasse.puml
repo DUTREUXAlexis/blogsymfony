@@ -8,6 +8,8 @@ id : int
 titre : string
 contenu : text
 createdAt : datetime
+slug : string
+publie : bool
 }
 
 class Catégorie
