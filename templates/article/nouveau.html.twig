@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvel Article{% endblock %}
+
+{% block body %}
+    <h1>Créer un nouvel article</h1>
+    {{ form_start(formArticle) }}
+        {{ form_row(formArticle.titre,{
+        'label' : 'Titre du nouvel article',
+        'help' : 'Le titre devra au moins contenir 5 caractères',
+        'attr':{
+                'placeholder' : "Titre de l'article ..."
+               },
+        'required':false
+            })
+        }}
+        {{ form_row(formArticle.contenu) }}
+        {{ form_row(formArticle.categorie) }}
+        {{ form_row(formArticle.publie,
+            {'label' : 'POUBLIUER LARTICLE'}) }}
+        <input type="submit" class="btn btn-primary" value="Valider"/>
+    {{ form_end(formArticle) }}
+
+{% endblock %}

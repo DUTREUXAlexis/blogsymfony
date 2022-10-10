@@ -8,7 +8,7 @@
     <ul class="p-2">
         <div class="border p-4 bg-light mt-4 mb-4"><h2> {{ articles.titre }} </h2>
             <p class="font-italic mb-5">Créer le {{ articles.createdAt | date('d/m/Y')  }}</p>
-            <p>{{ articles.contenu }}</p>
+            <p>{{ articles.contenu | raw  }}</p>
             <a href=""><span class="badge bg-secondary"></span></a>
             <a class="badge bg-secondary text-light" href="{{ path("app_categorie_slug",{"slug":articles.categorie.slug }) }}">Détail de la catégorie</a>
             <p><a href="{{ path("app_articles") }}">Retour aux articles</a></p>
@@ -16,10 +16,16 @@
 
         </div>
     </ul>
+    <h1>Ajouter un commentaire</h1>
+    {#  {{ form_start( formCommentaire) }}
+        {{ form_row(formCommentaire.titre,{
+            'label':'Rédiger un commentaire ...',
+            ''
+        }) }}
+    {{ form_end(formCommentaire) }}#}
     <h2>Commentaires</h2>
     <div class="row container">
         <p class="col">Il y a {{ articles.commentaires | length }} commentaires</p>
-        <a class="col-3 btn btn-secondary" href="{{ path('app_article_commentaire',{"slug":articles.slug})}}">Ajouter un commentaire</a>
     </div>
 
     {% for comment in articles.commentaires %}
@@ -29,4 +35,8 @@
             <p>écrit le {{ comment.createdat | date("d/m/Y")}}</p>
         </div>
     {% endfor %}
+
+
+
+
 {% endblock %}
