@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvel Article{% endblock %}
+
+{% block body %}
+
+    {{ form_start(formArticle) }}
+    <h1 class="mt-5">Modifier l'article</h1>
+    {{ form_row(formArticle.titre,{
+        'label' : 'Titre de l\'article',
+        'help' : 'Le titre devra au moins contenir 5 caractères',
+        'attr':{
+            'placeholder' : "Titre de l'article ..."
+        },
+        'required':false
+    })
+    }}
+    {{ form_row(formArticle.contenu) }}
+    {{ form_row(formArticle.categorie) }}
+    {{ form_row(formArticle.publie,
+        {'label' : 'PUBLIER L\'ARTICLE'}) }}
+    <input type="submit" class="btn btn-primary" value="Valider"/>
+    {{ form_end(formArticle) }}
+
+{% endblock %}

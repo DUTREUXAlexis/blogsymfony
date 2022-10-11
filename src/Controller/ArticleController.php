@@ -22,9 +22,10 @@ class ArticleController extends AbstractController
     //Demander à symfony d'injecter une instance de Article Repository
     // à la création du co,ntroller (instance de ArticleController)
 
-    public function __construct(ArticleRepository $articleRepository)
+    public function __construct(ArticleRepository $articleRepository, CommentaireRepository $commentaireRepository)
     {
         $this->articleRepository = $articleRepository;
+        $this->commentaireRepository = $commentaireRepository;
     }
 
 
@@ -50,18 +51,30 @@ class ArticleController extends AbstractController
     // A l'appel de la méthoide getArticle symfony va créer un objet de la classe articleRepository
         //et le passer en paramètrede la méthode
         // Mecanisme : INJECTION DE DEPENDANCES
-    public function getArticle($slug): Response
+    public function getArticle($slug, Request $request): Response
     {
         //Récuperer les infos dans la BDD
         //le controlleur fait appel au modèle ( une classe du modèle )
         // Afin de récuperer la liste des articles
         //$repository = new ArticleRepository();
         $articles = $this->articleRepository->findOneBy(["slug"=>$slug]);
-        $categorie = $articles->getCategorie()->getTitre();
 
-        return $this->render('article/index.html.twig', [
+        $commentaire = new Commentaire();
+        $formCommentaire = $this->createForm(CommentaireType::class,$commentaire);
+        $formCommentaire->handleRequest($request);
+
+        if($formCommentaire->isSubmitted() && $formCommentaire->isValid()){
+            $commentaire->setCreatedAt(new \DateTime())
+                ->setArticle($articles);
+            $this->commentaireRepository->add($commentaire,true);
+            return $this->redirectToRoute("app_articles");
+        }
+
+
+
+        return $this->renderForm('article/index.html.twig', [
             'articles' => $articles,
-            'categorie' => $categorie
+            'form' => $formCommentaire
         ]);
     }
 
@@ -84,24 +97,29 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/articles/commentaire/{slug}', name: 'app_article_commentaire',methods:['GET','POST'],priority: 1)]
-    public function addCommentaire($slug, Request $request): Response
+    #[Route('/articles/modifier/{slug}', name: 'app_article_modifier',methods:['GET','POST'],priority: 1)]
+    public function modifier(SluggerInterface $slugger, Request $request, $slug): Response
     {
-        $commentaire = new Commentaire();
-        $article = $this->articleRepository->findOneBy(["slug" => $slug]);
-        $formCommentaire = $this->createForm(CommentaireType::class,$commentaire);
-        $formCommentaire->handleRequest($request);
+        $article = $this->articleRepository->findOneBy(["slug"=>$slug]);
 
-        if($formCommentaire->isSubmitted() && $formCommentaire->isValid()){
-            $commentaire->setCreatedAt(new \DateTime())
-                        ->setArticle($article);
-            $this->commentaireRepository->add($commentaire,true);
+        $formArticle = $this->createForm(ArticleType::class,$article);
+
+        $formArticle->handleRequest($request);
+        if($formArticle->isSubmitted() && $formArticle->isValid()){
+            $article->setSlug($slugger->slug($article->getTitre())->lower());
+            $article->setCreatedAt(new \DateTime());
+            $this->articleRepository->add($article,true);
             return $this->redirectToRoute("app_articles");
         }
-        return $this->renderForm('article/index.html.twig',[
-            'formCommentaire' => $formCommentaire
+        return $this->renderForm('article/modifier.html.twig',[
+            'formArticle' => $formArticle
         ]);
     }
 
+    #[Route('/admin', name: 'app_dashboard')]
+    public function goDashBoard(): Response
+    {
+        return $this->render('article/index.html.twig');
+    }
 
 }

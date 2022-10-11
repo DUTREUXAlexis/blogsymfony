@@ -4,25 +4,27 @@
 {% block title %}Détails Article{% endblock %}
 
 {% block body %}
-    <h1 class="mt-5">{{ articles.titre | upper }}</h1>
     <ul class="p-2">
         <div class="border p-4 bg-light mt-4 mb-4"><h2> {{ articles.titre }} </h2>
             <p class="font-italic mb-5">Créer le {{ articles.createdAt | date('d/m/Y')  }}</p>
             <p>{{ articles.contenu | raw  }}</p>
-            <a href=""><span class="badge bg-secondary"></span></a>
-            <a class="badge bg-secondary text-light" href="{{ path("app_categorie_slug",{"slug":articles.categorie.slug }) }}">Détail de la catégorie</a>
-            <p><a href="{{ path("app_articles") }}">Retour aux articles</a></p>
+            <div class="row">
+                <a class="col badge bg-secondary text-light" href="{{ path("app_categorie_slug",{"slug":articles.slug }) }}">Détail de la catégorie</a>
+                <a class="col text-center" href="{{ path("app_articles") }}">Retour aux articles</a></p>
+                <a class="col text-center" href="{{ path("app_article_modifier",{"slug":articles.slug}) }}">modifier l'article</a>
+            </div>
 
 
         </div>
     </ul>
     <h1>Ajouter un commentaire</h1>
-    {#  {{ form_start( formCommentaire) }}
-        {{ form_row(formCommentaire.titre,{
-            'label':'Rédiger un commentaire ...',
-            ''
-        }) }}
-    {{ form_end(formCommentaire) }}#}
+
+      {{ form_start(form) }}
+        {{ form_row(form) }}
+    <button class="btn btn-secondary" type="submit">Commenter</button>
+    {{ form_end(form) }}
+
+
     <h2>Commentaires</h2>
     <div class="row container">
         <p class="col">Il y a {{ articles.commentaires | length }} commentaires</p>
@@ -30,7 +32,16 @@
 
     {% for comment in articles.commentaires %}
         <div class="border bg-light m-3 p-4">
-            <h3>Ce commentaire a été écrit par {{ comment.utilisateur.pseudo }}</h3>
+            <h3>Ce commentaire a été écrit par
+
+                {% if comment.utilisateur is not empty %}
+                {{ comment.utilisateur.pseudo }}
+                {% else  %}
+                    Anonyme
+                    {% endif %}
+
+
+                    </h3>
             <p>{{ comment.contenu }}</p>
             <p>écrit le {{ comment.createdat | date("d/m/Y")}}</p>
         </div>
